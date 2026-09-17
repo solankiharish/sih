@@ -20,7 +20,13 @@ function encryptBuffer(buffer) {
   const authTag = cipher.getAuthTag();
   return { encryptedData: encrypted, iv, authTag };
 }
+const secretKey = process.env.ENCRYPTION_KEY;
 
+if (!secretKey) {
+  throw new Error("ENCRYPTION_KEY environment variable is not defined.");
+}
+
+const keyBuffer = Buffer.from(secretKey, 'hex'); // or 'utf-8'
 /**
  * Decrypts a Buffer using AES-256-GCM.
  */
