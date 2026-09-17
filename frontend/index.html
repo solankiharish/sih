@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SecureDocs | SIH26190 - Secure Digital Document Management</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ======================= LOGIN VIEW ======================= -->
+  <div id="loginView" class="view">
+    <div class="login-wrap">
+      <div class="brand">
+        <div class="brand-badge">⚖</div>
+        <h1>SecureDocs</h1>
+        <p class="brand-sub">Secure Digital Document Management System<br/>for Legal &amp; Investigation Documents</p>
+        <p class="ps-tag">SIH26190 · Ministry of Home Affairs · Blockchain &amp; Cybersecurity</p>
+      </div>
+
+      <form id="loginForm" class="login-card">
+        <h2>Sign in</h2>
+        <label>Username</label>
+        <input type="text" id="loginUsername" placeholder="e.g. investigator1" required />
+
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required />
+
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+        <p id="loginError" class="error-text"></p>
+
+        <div class="demo-creds">
+          <p><strong>Demo accounts</strong></p>
+          <ul>
+            <li><span class="role-chip admin">admin</span> admin / Admin@123</li>
+            <li><span class="role-chip investigator">investigator</span> investigator1 / Invest@123</li>
+            <li><span class="role-chip judge">judge</span> judge1 / Judge@123</li>
+          </ul>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================= DASHBOARD VIEW ======================= -->
+  <div id="dashboardView" class="view hidden">
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="brand-badge small">⚖</span>
+        <span class="topbar-title">SecureDocs <span class="ps-inline">SIH26190</span></span>
+      </div>
+      <div class="topbar-right">
+        <span id="userInfo" class="user-info"></span>
+        <button id="logoutBtn" class="btn btn-ghost">Logout</button>
+      </div>
+    </header>
+
+    <nav class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="documents">Documents</button>
+      <button class="tab-btn hidden" id="uploadTabBtn" data-tab="upload">Upload Evidence</button>
+      <button class="tab-btn hidden" id="usersTabBtn" data-tab="users">Manage Users</button>
+      <button class="tab-btn hidden" id="auditTabBtn" data-tab="audit">Audit Log</button>
+    </nav>
+
+    <main class="content">
+
+      <!-- Documents tab -->
+      <section id="tab-documents" class="tab-panel">
+        <div class="panel-header">
+          <h2>Case Documents</h2>
+          <button id="refreshDocsBtn" class="btn btn-secondary">↻ Refresh</button>
+        </div>
+        <div id="docList" class="doc-list"></div>
+      </section>
+
+      <!-- Upload tab (investigator/admin only) -->
+      <section id="tab-upload" class="tab-panel hidden">
+        <div class="panel-header"><h2>Upload New Evidence Document</h2></div>
+        <form id="uploadForm" class="upload-card">
+          <div class="form-row">
+            <div>
+              <label>Case ID</label>
+              <input type="text" id="caseId" placeholder="e.g. FIR-2026-00451" required />
+            </div>
+            <div>
+              <label>Document Title</label>
+              <input type="text" id="docTitle" placeholder="e.g. Witness Statement - Site A" required />
+            </div>
+          </div>
+          <label>Description (optional)</label>
+          <textarea id="docDescription" rows="3" placeholder="Short note about this evidence..."></textarea>
+
+          <label>File</label>
+          <input type="file" id="docFile" required />
+          <p class="hint">File is encrypted with AES-256-GCM before storage. A SHA-256 hash is generated for tamper-evidence.</p>
+
+          <button type="submit" class="btn btn-primary">🔒 Encrypt &amp; Upload</button>
+          <p id="uploadMsg" class="status-text"></p>
+        </form>
+      </section>
+
+      <!-- Users tab (admin only) -->
+      <section id="tab-users" class="tab-panel hidden">
+        <div class="panel-header"><h2>Manage Users</h2></div>
+
+        <form id="createUserForm" class="upload-card">
+          <div class="form-row">
+            <div>
+              <label>Full Name</label>
+              <input type="text" id="newFullName" required />
+            </div>
+            <div>
+              <label>Username</label>
+              <input type="text" id="newUsername" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div>
+              <label>Password</label>
+              <input type="password" id="newPassword" required />
+            </div>
+            <div>
+              <label>Role</label>
+              <select id="newRole">
+                <option value="investigator">Investigator</option>
+                <option value="judge">Judge</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">+ Create User</button>
+          <p id="createUserMsg" class="status-text"></p>
+        </form>
+
+        <div id="userList" class="doc-list"></div>
+      </section>
+
+      <!-- Audit log tab (admin only) -->
+      <section id="tab-audit" class="tab-panel hidden">
+        <div class="panel-header">
+          <h2>Chain-of-Custody Audit Log</h2>
+          <button id="refreshAuditBtn" class="btn btn-secondary">↻ Refresh</button>
+        </div>
+        <div id="auditList" class="audit-list"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Document viewer modal -->
+  <div id="viewerModal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="viewerTitle">Document</h3>
+        <button id="closeViewerBtn" class="btn btn-ghost">✕</button>
+      </div>
+      <div id="viewerBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

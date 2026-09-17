@@ -1,0 +1,19 @@
+services:
+  securedocs:
+    build:
+      context: .
+    restart: unless-stopped
+    ports:
+      - "${PORT:-5000}:5000"
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      AES_SECRET_KEY: ${AES_SECRET_KEY:?Set AES_SECRET_KEY in .env}
+    volumes:
+      - securedocs-data:/app/backend/data
+      - securedocs-uploads:/app/backend/uploads
+
+volumes:
+  securedocs-data:
+  securedocs-uploads:
